@@ -1,10 +1,10 @@
 export default {
   colors: {
-    primary: '#327DCB',
-    secondary: '#5494D6',
-    dark: '#094B91',
-    semidark: '#0F66C1',
-    light: '#7EB0E4',
+    primary: '#122d77',
+    secondary: '#1f3e93',
+    dark: '#041543',
+    semidark: '#092060',
+    light: '#3d579e',
   },
   metrics: {
     padding: 15,

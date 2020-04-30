@@ -1,17 +1,22 @@
 import React, { useState } from 'react';
 import { AppLoading } from 'expo'
 
+import {View, Text} from 'react-native'
+
 import * as Font from 'expo-font'
 
 import Home from './pages/Home'
+import Product from './pages/Product'
+import Profile from './pages/Profile'
+import Ranking from './pages/Ranking'
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 const getFont = () => Font.loadAsync({
   'Tauri': require('../assets/fonts/Tauri-Regular.ttf')
 })
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false)
@@ -19,14 +24,17 @@ export default function App() {
   if(fontsLoaded){
     return (
       <NavigationContainer>
-        <Stack.Navigator 
+        <Drawer.Navigator 
           initialRouteName="Home" 
           screenOptions={{
             headerShown: false
           }}
         >
-          <Stack.Screen name="Home" component={Home} />
-        </Stack.Navigator>
+          <Drawer.Screen name="Home" component={Home} />
+          <Drawer.Screen name="Product" component={Product} />
+          <Drawer.Screen name="Profile" component={Profile} />
+          <Drawer.Screen name="Ranking" component={Ranking} />
+        </Drawer.Navigator>
       </NavigationContainer>
     )
   } else {

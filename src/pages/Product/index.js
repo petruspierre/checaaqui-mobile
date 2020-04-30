@@ -1,10 +1,15 @@
 import React from 'react'
-import {View} from 'react-native'
+import {
+  View,
+  Text
+} from 'react-native'
 
 import styles from './styles.js'
 
-export default function Profile(){
+export default function Product(){
   return (
-    <View />
+    <View style={{justifyContent: "center", alignItems: "center"}}>
+      <Text>oi</Text>
+    </View>
   )
 }
