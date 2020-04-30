@@ -1,5 +1,9 @@
 {
   "expo": {
+    "androidStatusBar": {
+      "backgroundColor": "#041543",
+      "barStyle": "light-content"
+    },
     "name": "MegaHack_Mobile",
     "slug": "MegaHack_Mobile",
     "platforms": [

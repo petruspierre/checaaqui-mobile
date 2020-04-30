@@ -21,10 +21,12 @@ export default function Home({ navigation }){
 
   return (
     <View style={styles.container}>
-      <LinearGradient style={styles.header} colors={['#3d579e', '#3D57AA']} start={[0.4,0.5]} end={[0.6,0.8]}>
+      <LinearGradient style={styles.header} colors={['#092060', '#051A52']} start={[0.4,0.5]} end={[0.6,0.8]}>
         
         <View style={styles.headerBar}>
-          <FontAwesome name="bars" color="#fff" size={32} style={styles.menuIcon}/>
+          <TouchableOpacity style={styles.menuIcon} onPress={() => navigation.openDrawer()}>
+            <FontAwesome name="bars" color="#fff" size={32}/>
+          </TouchableOpacity>
           <Text style={styles.title}>Checa Aqui</Text>
         </View>
 
