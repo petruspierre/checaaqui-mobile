@@ -5,6 +5,7 @@ import commonStyles from '../../commonStyles'
 
 export default styles = StyleSheet.create({
   container: {
+    backgroundColor: "#fff",
     paddingTop: Constants.statusBarHeight,
     flex: 1,
     alignItems: "center",
@@ -15,12 +16,13 @@ export default styles = StyleSheet.create({
     left: 10
   },
   header: {
-    paddingTop: 3,
     alignItems: "center",
-    width: Dimensions.get('window').width,
+    width: Dimensions.get('window').width - 32,
+    marginTop: 32,
     //height: Dimensions.get('window').height / 3,
     backgroundColor: commonStyles.colors.light,
 
+    borderRadius: 16,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -32,12 +34,13 @@ export default styles = StyleSheet.create({
     elevation: 13,
   },
   headerBar: {
+    marginTop: 8,
     flexDirection: "row",
     justifyContent: "center",
     width: Dimensions.get('window').width,
   },
   headerCheck: {
-    marginTop: 32,
+    marginTop: 16,
     marginLeft: 64,
     width: Dimensions.get('window').width,
   },
@@ -47,7 +50,7 @@ export default styles = StyleSheet.create({
     marginRight: 16
   },
   title: {
-    color: "#fff",
+    color: commonStyles.colors.primary,
     fontSize: 24
   },
   welcomeText: {
@@ -87,5 +90,15 @@ export default styles = StyleSheet.create({
     width: Dimensions.get("window").width - 50 - (Dimensions.get("window").width - 100),
     height: Dimensions.get("window").width - 50 - (Dimensions.get("window").width - 100),
     backgroundColor: commonStyles.colors.secondary
+  },
+
+
+  categoriesContainer: {
+    width: Dimensions.get("window").width - 32,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 16,
+    marginLeft: 16,
+    marginRight: 16,
   }
 })

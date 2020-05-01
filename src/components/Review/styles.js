@@ -52,7 +52,8 @@ export default styles = StyleSheet.create({
     color:"#333"
   },
   reviewText: {
-      fontSize: 22,
+      marginTop: 8,
+      fontSize: 20,
       color:"#555",
       textAlign: "justify"
   },
