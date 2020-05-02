@@ -94,7 +94,18 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="Sobre nós"
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('About')}}
+                        />
+                        <DrawerItem 
+                            icon={({color, size}) => (
+                                <Feather 
+                                    name="phone"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="Contato"
+                            onPress={() => {props.navigation.navigate('About')}}
                         />
                     </Drawer.Section>
                 </View>

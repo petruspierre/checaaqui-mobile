@@ -9,6 +9,7 @@ import Home from './pages/Home'
 import Product from './pages/Product'
 import Profile from './pages/Profile'
 import Ranking from './pages/Ranking'
+import About from './pages/About'
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import ProductList from './pages/ProductList';
@@ -39,6 +40,7 @@ export default function App() {
           <Drawer.Screen name="Profile" component={Profile} />
           <Drawer.Screen name="Ranking" component={Ranking} />
           <Drawer.Screen name="ProductList" component={ProductList} />
+          <Drawer.Screen name="About" component={About} />
         </Drawer.Navigator>
       </NavigationContainer>
     )
