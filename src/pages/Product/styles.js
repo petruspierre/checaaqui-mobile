@@ -79,15 +79,16 @@ export default styles = StyleSheet.create({
   reviewContainer: {
     flex: 1,
     width: Dimensions.get("window").width,
-    paddingLeft: 32,
-    paddingRight: 32,
-    paddingTop: 16,
-    paddingBottom: 32,
-    borderBottomColor: "black"
+    // paddingLeft: 32,
+    // paddingRight: 32,
+    // paddingTop: 16,
+    // paddingBottom: 32,
   },
   orderBy: {
     color: "#666",
     fontSize: 16,
+    marginLeft: 16,
+    marginBottom: 8,
   },
 
   doReviewContainer: {

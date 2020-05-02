@@ -1,9 +1,12 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 
 import commonStyles from '../../commonStyles'
 
 export default styles = StyleSheet.create({
   container: {
+
+    width: Dimensions.get('window').width - 76,
+    marginLeft: 16,
     padding: 16,
     marginTop: 16,
     flex: 1,
@@ -17,7 +20,26 @@ export default styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 2,
-    marginBottom: 8,
+    marginBottom: 32,
+  },
+  containerProfile: {
+    width: Dimensions.get('window').width - 76,
+    height: 350,
+    overflow: "scroll",
+    marginLeft: 16,
+    padding: 16,
+    marginTop: 16,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 16,
+
+    borderColor: '#ddd',
+    borderBottomWidth: 0,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 1,
+    marginBottom: 32,
   },
   profileInfo: {
       flexDirection: "row",

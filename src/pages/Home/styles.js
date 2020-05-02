@@ -31,7 +31,7 @@ export default styles = StyleSheet.create({
     shadowOpacity: 0.22,
     shadowRadius: 2.22,
 
-    elevation: 13,
+    elevation: 3,
   },
   headerBar: {
     marginTop: 8,

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {
   View,
   Text,
-  Image
+  Image,
+  FlatList
 } from 'react-native'
 
 import {Feather, FontAwesome} from '@expo/vector-icons'
@@ -14,6 +15,22 @@ import commonStyles from '../../commonStyles'
 import Review from '../../components/Review'
 
 export default function Product({navigation}){
+
+  const [reviews, setReviews] = useState([
+    {
+      id: '1',
+      name: 'José E. da Silva',
+      shop: 'Lojas Americanas',
+      review: 'Ah mano sei lá até que curti o produto porém sei la sabe n sei só sei que nada sei ja dizia aquele filósofo, não sei o nome pois não cheguei a concluir o ensino médio'
+    },
+    {
+      id: '2',
+      name: 'Paula Tejano',
+      shop: 'Casas Bahia',
+      review: 'Achei supeeeeeeeeeeeeer nossa amei demais nossa gente zero defeitossssssssssss. Recomendo a todeeeeees, super rápido a entrega inclusie viu'
+    },
+  ])
+
   return (
     <View style={styles.container}>
 
@@ -39,11 +56,15 @@ export default function Product({navigation}){
       </View>
 
       <View style={styles.reviewContainer}>
-        <Text style={{fontSize: 20, fontWeight: "bold"}}>Avaliações de outros compradores</Text>
+        <Text style={{marginLeft: 16, marginTop: 8, fontSize: 20, fontWeight: "bold"}}>Avaliações de outros compradores</Text>
         <Text style={styles.orderBy}>Ordenar por: Relevância</Text>
 
-        <Review name="José Ernesto da Silva" shop="Lojas Americanas" review="Ah mano sei lá até que curti o produto porém sei la sabe n sei só sei que nada sei ja dizia aquele filósofo, não sei o nome pois não cheguei a concluir o ensino médio"/>
-        {/* <Review name="Paula Tejano" shop="Casas Bahia" review="Achei supeeeeeeeeeeeeer nossa amei demais nossa gente zero defeitossssssssssss. Recomendo a todeeeeees, super rápido a entrega inclusie viu"/> */}
+        <FlatList 
+          data={reviews}
+          renderItem={({ item }) => <Review name={item.name} shop={item.shop} review={item.review}/>}
+          keyExtractor={item => item.id}
+          horizontal={true}
+        />
         
       </View>
 
