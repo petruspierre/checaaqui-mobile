@@ -25,7 +25,7 @@ export default styles = StyleSheet.create({
   header: {
     width: Dimensions.get('window').width - 32,
 
-    marginTop: 16,
+    marginTop: 8,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

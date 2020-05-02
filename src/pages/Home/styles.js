@@ -18,7 +18,7 @@ export default styles = StyleSheet.create({
   header: {
     alignItems: "center",
     width: Dimensions.get('window').width - 32,
-    marginTop: 32,
+    marginTop: 8,
     //height: Dimensions.get('window').height / 3,
     backgroundColor: commonStyles.colors.light,
 
@@ -32,12 +32,6 @@ export default styles = StyleSheet.create({
     shadowRadius: 2.22,
 
     elevation: 3,
-  },
-  headerBar: {
-    marginTop: 8,
-    flexDirection: "row",
-    justifyContent: "center",
-    width: Dimensions.get('window').width,
   },
   headerCheck: {
     marginTop: 16,

@@ -14,6 +14,7 @@ import styles from './styles'
 import commonStyles from '../../commonStyles'
 
 import Review from '../../components/Review'
+import Header from '../../components/Header'
 
 export default function Profile({ navigation, route }){
 
@@ -39,11 +40,7 @@ export default function Profile({ navigation, route }){
   return (
     <View style={styles.container}>
 
-      <TouchableOpacity style={styles.back} onPress={() => navigation.goBack()}>
-        <Feather name="arrow-left" color={commonStyles.colors.primary} size={40}/>
-      </TouchableOpacity>
-
-      <Text style={styles.logo}>Checa Aqui</Text>
+      <Header icon="arrow-left" onPress={() => navigation.goBack()}/>
 
       <View style={styles.header}>
         <View style={styles.bordinha}>

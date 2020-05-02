@@ -4,8 +4,8 @@
       "backgroundColor": "#041543",
       "barStyle": "light-content"
     },
-    "name": "MegaHack_Mobile",
-    "slug": "MegaHack_Mobile",
+    "name": "Checa Aqui",
+    "slug": "megahack",
     "platforms": [
       "ios",
       "android",
@@ -26,7 +26,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.megahack.checaaqui",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.megahack.checaaqui",
+      "versionCode": 1
     }
   }
 }

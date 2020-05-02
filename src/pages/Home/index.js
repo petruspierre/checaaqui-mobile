@@ -14,6 +14,7 @@ import commonStyles from '../../commonStyles'
 import styles from './styles'
 
 import Categories from '../../components/Categories'
+import Header from '../../components/Header'
 
 import logoEletrodomestico from '../../../assets/icons/eletrodomestico.png'
 import logoTelevisao from '../../../assets/icons/televisao.png'
@@ -30,12 +31,8 @@ export default function Home({ navigation }){
 
   return (
     <View style={styles.container}>
-      <View style={styles.headerBar}>
-        <TouchableOpacity style={styles.menuIcon} onPress={() => navigation.openDrawer()}>
-          <Feather name="menu" color={commonStyles.colors.primary} size={40}/>
-        </TouchableOpacity>
-        <Text style={styles.title}>Checa Aqui</Text>
-      </View>
+
+      <Header icon="menu" onPress={() => navigation.openDrawer()}/>
 
       <LinearGradient style={styles.header} colors={['#092060', '#051A52']} start={[0.4,0.5]} end={[0.6,0.8]}>  
         <View style={styles.headerCheck}>
