@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {View, Text, Image, TouchableOpacity} from 'react-native'
+import {View, ScrollView, Text, Image, TouchableOpacity} from 'react-native'
 import styles from './styles'
 
 import {useNavigation} from '@react-navigation/native'
@@ -12,7 +12,7 @@ export default function Review(props) {
     const navigation = useNavigation()
 
     function handleContact(){
-        navigation.navigate('Profile', { name: props.name })
+        navigation.navigate('Profile', { name: props.name, mine: false })
     }
 
     if(!props.profile){
@@ -27,7 +27,9 @@ export default function Review(props) {
                         <Text style={styles.shopProfile}>{props.shop}</Text>
                     </View>
                 </View>
-                <Text style={styles.reviewText}>{props.review}</Text>
+                <ScrollView style={{flex: 1}}>
+                    <Text style={styles.reviewText}>{props.review}</Text>
+                </ScrollView>
                 <TouchableOpacity style={styles.button} onPress={handleContact}>
                     <Text style={styles.textButton}>Fale com {props.name}</Text>
                 </TouchableOpacity>
@@ -45,7 +47,9 @@ export default function Review(props) {
                         <Text style={styles.shopProfile}>{props.shop}</Text>
                     </View>
                 </View>
-                <Text style={styles.reviewText}>{props.review}</Text>
+                <ScrollView style={{flex: 1}}>
+                    <Text style={styles.reviewText}>{props.review}</Text>
+                </ScrollView>
             </View>
         )
     }

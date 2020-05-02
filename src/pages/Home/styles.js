@@ -51,6 +51,7 @@ export default styles = StyleSheet.create({
   },
   title: {
     color: commonStyles.colors.primary,
+    marginTop: 8,
     fontSize: 24
   },
   welcomeText: {

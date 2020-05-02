@@ -19,6 +19,8 @@ const getFont = () => Font.loadAsync({
 
 const Drawer = createDrawerNavigator();
 
+import DrawerContent from './DrawerContent'
+
 export default function App() {
   const [fontsLoaded, setFontsLoaded] = useState(false)
 
@@ -30,6 +32,7 @@ export default function App() {
           screenOptions={{
             headerShown: false
           }}
+          drawerContent={props => <DrawerContent {...props} />}
         >
           <Drawer.Screen name="Home" component={Home} />
           <Drawer.Screen name="Product" component={Product} />

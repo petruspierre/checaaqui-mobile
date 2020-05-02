@@ -7,7 +7,7 @@ import {
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient'
-import {FontAwesome} from '@expo/vector-icons'
+import {Feather} from '@expo/vector-icons'
 import {RadioButton} from 'react-native-paper'
 
 import commonStyles from '../../commonStyles'
@@ -32,7 +32,7 @@ export default function Home({ navigation }){
     <View style={styles.container}>
       <View style={styles.headerBar}>
         <TouchableOpacity style={styles.menuIcon} onPress={() => navigation.openDrawer()}>
-          <FontAwesome name="bars" color={commonStyles.colors.primary} size={32}/>
+          <Feather name="menu" color={commonStyles.colors.primary} size={40}/>
         </TouchableOpacity>
         <Text style={styles.title}>Checa Aqui</Text>
       </View>
@@ -76,7 +76,7 @@ export default function Home({ navigation }){
               onChangeText={text => setSearch(text)}
             />
             <TouchableOpacity style={styles.button}>
-              <FontAwesome name="search" size={24} color="#fff" />
+              <Feather name="search" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>

@@ -12,7 +12,6 @@ export default styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f9f9f9",
     borderRadius: 16,
-
     borderColor: '#ddd',
     borderBottomWidth: 0,
     shadowColor: '#000',
@@ -25,7 +24,6 @@ export default styles = StyleSheet.create({
   containerProfile: {
     width: Dimensions.get('window').width - 76,
     height: 350,
-    overflow: "scroll",
     marginLeft: 16,
     padding: 16,
     marginTop: 16,
@@ -77,7 +75,8 @@ export default styles = StyleSheet.create({
       marginTop: 8,
       fontSize: 20,
       color:"#555",
-      textAlign: "justify"
+      textAlign: "justify",
+      //height: 50
   },
   button: {
       paddingTop: 6,
