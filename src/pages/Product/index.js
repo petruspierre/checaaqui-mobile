@@ -3,7 +3,10 @@ import {
   View,
   Text,
   Image,
-  FlatList
+  FlatList,
+  Modal,
+  TouchableWithoutFeedback,
+  TextInput
 } from 'react-native'
 
 import {Feather, FontAwesome} from '@expo/vector-icons'
@@ -15,7 +18,9 @@ import commonStyles from '../../commonStyles'
 import Review from '../../components/Review'
 
 export default function Product({navigation}){
-
+  
+  const [review, setReview] = useState('')
+  const [modalVisible, setModalVisible] = useState(false)
   const [reviews, setReviews] = useState([
     {
       id: '1',
@@ -31,8 +36,44 @@ export default function Product({navigation}){
     },
   ])
 
+  function handleSubmitReview(){
+    setModalVisible(true)
+  }
+
   return (
     <View style={styles.container}>
+
+      <Modal 
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}>
+
+        <View style={{flex: 1}}>
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+            <View style={{flex: 0.8, backgroundColor: "rgba(0,0,0,0.5)"}}/> 
+          </TouchableWithoutFeedback>
+
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Avalie este produto</Text>
+            <TextInput 
+              style={styles.modalInput}
+              placeholder="Digite aqui sua avaliação"
+              onChangeText={text => setReview(text)}
+              value={review}
+              
+              autoFocus={true}
+              multiline={true}/>
+            <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}> 
+              <Text style={styles.modalButtonText}>ENVIAR</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+            <View style={{flex: 0.8, backgroundColor: "rgba(0,0,0,0.5)"}}/> 
+          </TouchableWithoutFeedback>
+        </View>
+
+      </Modal>
 
       <View style={styles.productContainer}>
 
@@ -70,7 +111,7 @@ export default function Product({navigation}){
 
       <View style={styles.doReviewContainer}>
         <Text style={styles.hasExperience}>Tem alguma experiência com este produto?</Text>
-        <TouchableOpacity style={styles.reviewButton}>
+        <TouchableOpacity style={styles.reviewButton} onPress={handleSubmitReview}>
           <Text style={styles.buttonText}>AVALIAR</Text>
         </TouchableOpacity>
       </View>
