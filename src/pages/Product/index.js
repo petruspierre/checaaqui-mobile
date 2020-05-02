@@ -17,7 +17,7 @@ import commonStyles from '../../commonStyles'
 
 import Review from '../../components/Review'
 
-export default function Product({navigation}){
+export default function Product({navigation, route}){
   
   const [review, setReview] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
@@ -84,9 +84,9 @@ export default function Product({navigation}){
         </View>
 
         <View style={{backgroundColor: "#fff"}}>
-          <Image style={styles.productImage} source={{uri: "https://images-americanas.b2w.io/produtos/01/00/img/134240/6/134240675_1SZ.jpg"}}/>
+          <Image style={styles.productImage} source={route.params.image}/>
         </View>
-        <Text style={styles.productTitle}>Smart TV LED 43'' Samsung 43RU7100 Ultra HD 4K</Text>
+        <Text style={styles.productTitle}>{route.params.title}</Text>
         <View style={styles.aditionalInfo}>
           <Text style={styles.productType}>TV e eletrônicos</Text>
           <View style={{flexDirection: "row", alignItems: "center"}}>

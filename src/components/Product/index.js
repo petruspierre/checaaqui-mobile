@@ -15,7 +15,7 @@ export default function ProductList (props){
     const navigation = useNavigation()
 
     return(
-        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Product')}>
+        <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('Product', {image: props.image, title: props.title})}>
             <Image style={styles.image} source={props.image}/>
             <Text style={styles.title}>{props.title}</Text>
         </TouchableOpacity>

@@ -2,17 +2,15 @@ import React, {useState} from 'react'
 import {
     View,
     FlatList,
-    TouchableOpacity
+    Text
 } from 'react-native'
 
-import { Feather } from '@expo/vector-icons'
-
 import styles from './styles'
-import commonStyles from '../../commonStyles'
 
 import Product from '../../components/Product'
+import Header from '../../components/Header'
 
-export default function ProductList ({navigation}){
+export default function ProductList ({ navigation, route }){
 
     const [products, setProducts] = useState([
         {
@@ -34,9 +32,11 @@ export default function ProductList ({navigation}){
     return(
         <View style={styles.container}>
 
-            <TouchableOpacity style={styles.back} onPress={() => navigation.goBack()}>
-                <Feather name="arrow-left" color={commonStyles.colors.primary} size={42}/>
-            </TouchableOpacity>
+            <Header icon="arrow-left" onPress={() => navigation.goBack()}/>
+
+            <View style={styles.titleContainer}>
+                <Text style={styles.title}>{route.params.name}</Text>
+            </View>
 
             <FlatList 
                 data={products}

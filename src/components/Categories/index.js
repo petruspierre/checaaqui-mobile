@@ -15,7 +15,7 @@ export default function Categories(props) {
     const navigation = useNavigation();
 
     return (
-       <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('ProductList')}>
+       <TouchableOpacity style={styles.container} onPress={() => navigation.navigate('ProductList', {name: props.title})}>
             <Image style={styles.image} source={props.image}/>
             <Text style={styles.title}>{props.title}</Text>
        </TouchableOpacity> 

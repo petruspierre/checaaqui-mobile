@@ -80,7 +80,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="Histórico"
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('History')}}
                         />
                     </Drawer.Section>
                                 
