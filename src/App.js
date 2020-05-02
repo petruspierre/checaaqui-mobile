@@ -11,6 +11,7 @@ import Profile from './pages/Profile'
 import Ranking from './pages/Ranking'
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
+import ProductList from './pages/ProductList';
 
 const getFont = () => Font.loadAsync({
   'Tauri': require('../assets/fonts/Tauri-Regular.ttf')
@@ -34,6 +35,7 @@ export default function App() {
           <Drawer.Screen name="Product" component={Product} />
           <Drawer.Screen name="Profile" component={Profile} />
           <Drawer.Screen name="Ranking" component={Ranking} />
+          <Drawer.Screen name="ProductList" component={ProductList} />
         </Drawer.Navigator>
       </NavigationContainer>
     )
