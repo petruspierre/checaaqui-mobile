@@ -60,8 +60,9 @@ export default function Profile({ navigation, route }){
 
       <FlatList 
           data={reviews}
+          showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => <Review name={item.name} shop={item.shop} review={item.review} profile={true}/>}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           horizontal={true}
         />
 

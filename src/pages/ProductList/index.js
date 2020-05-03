@@ -41,8 +41,9 @@ export default function ProductList ({ navigation, route }){
 
             <FlatList 
                 data={products}
+                showsVerticalScrollIndicator={false}
                 renderItem={({item}) => <Product title={item.title} image={item.image} />}
-                keyExtractor={item => item.id}
+                keyExtractor={item => String(item.id)}
             />
         </View>
     )

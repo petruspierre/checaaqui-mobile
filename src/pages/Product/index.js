@@ -100,8 +100,9 @@ export default function Product({navigation, route}){
 
         <FlatList 
           data={reviews}
+          showsHorizontalScrollIndicator={false}
           renderItem={({ item }) => <Review name={item.name} shop={item.shop} review={item.review}/>}
-          keyExtractor={item => item.id}
+          keyExtractor={item => String(item.id)}
           horizontal={true}
         />
         
