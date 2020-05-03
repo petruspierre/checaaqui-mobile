@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {AsyncStorage, View, Text, TextInput, TouchableOpacity} from 'react-native'
+import {AsyncStorage, View, Text, TextInput, TouchableOpacity, TouchableHighlight} from 'react-native'
 
 import {Feather} from '@expo/vector-icons'
 
@@ -16,6 +16,8 @@ export default function Auth({ navigation, route }){
   const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [confirmation, setConfirmation] = useState('')
+
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [visiblePassword, setVisiblePassword] = useState(false)
@@ -56,7 +58,12 @@ export default function Auth({ navigation, route }){
       setErrorMessage('Digite um email válido')
     } else {
       setError(false)
+      setType('Confirmação')
     }
+  }
+
+  function handleConfirmation(){
+    setType('Login')
   }
 
   function handleSwitchType(){
@@ -66,7 +73,7 @@ export default function Auth({ navigation, route }){
 
   useEffect(() => {
     setType(route.params.type)
-  }, [])
+  }, [route.params.type])
 
   if(type === 'Login'){
     return (
@@ -118,7 +125,7 @@ export default function Auth({ navigation, route }){
         </TouchableOpacity>
       </View>
     )
-  } else {
+  } else if(type === 'Cadastro'){
     return (
       <View style={styles.container}>
         <Header icon="menu" onPress={() => navigation.openDrawer()}/>
@@ -199,6 +206,36 @@ export default function Auth({ navigation, route }){
         <TouchableOpacity style={styles.button} onPress={handleSubmitRegister}>
           <Text style={styles.buttonText}>ENVIAR</Text>
         </TouchableOpacity>
+      </View>
+    )
+  } else {
+    return (
+      <View style={styles.container}>
+        <Header icon="menu" onPress={() => navigation.openDrawer()}/>
+  
+        <View style={commonStyles.titleContainer}>
+          <Text style={commonStyles.title}>{type}</Text>
+        </View>
+
+        {error &&
+          <Text style={styles.error}>{errorMessage}</Text>
+        }
+  
+        <View style={styles.formContainer}>
+          <View style={styles.field}>
+            <Text style={styles.fieldInfo}>Digite o código de confirmação</Text>
+            <Text style={{marginBottom: 8}}>Foi enviado pra o seu email.</Text>
+            <TextInput 
+              style={styles.textField}
+              value={confirmation}
+              onChangeText={text => setConfirmation(text)}
+            />
+          </View>
+        </View>
+  
+        <TouchableHighlight style={styles.button} onPress={handleConfirmation}>
+          <Text style={styles.buttonText}>ENVIAR</Text>
+        </TouchableHighlight>
       </View>
     )
   }

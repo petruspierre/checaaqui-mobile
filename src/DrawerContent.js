@@ -89,8 +89,6 @@ export default function DrawerContent(props) {
 
     async function handleLogin(){
         props.navigation.navigate('Auth', {type: 'Login'})
-        // await AsyncStorage.setItem('token', '123')
-        // setToken('123')
     }
 
     async function handleRegister(){
