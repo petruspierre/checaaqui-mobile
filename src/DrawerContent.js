@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { View, StyleSheet, AsyncStorage, Text, TouchableOpacity, Alert } from 'react-native'
 import { Feather } from '@expo/vector-icons'
+import * as MailComposer from 'expo-mail-composer'
 
 import {
     Avatar,
@@ -77,6 +78,14 @@ export default function DrawerContent(props) {
             setToken(await AsyncStorage.getItem('token'))
         }, 1000)
     })
+
+    function handleContact() {
+        MailComposer.composeAsync({
+            subject: "Ajuda com o Checa Aqui",
+            recipients: ["megahacktime39@gmail.com"],
+            body: "Olá! Preciso de ajuda com o aplicativo Checa Aqui"
+        })
+    }
 
     async function handleLogin(){
         props.navigation.navigate('Auth', {type: 'Login'})
@@ -180,7 +189,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="Contato"
-                            onPress={() => {props.navigation.navigate('About')}}
+                            onPress={handleContact}
                         />
                     </Drawer.Section>
                 </View>
