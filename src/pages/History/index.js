@@ -16,8 +16,8 @@ export default function History({navigation}) {
         <View style={styles.container}>
             <Header icon="menu" onPress={() => navigation.openDrawer()}/>
 
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}>Histórico</Text>
+            <View style={commonStyles.titleContainer}>
+                <Text style={commonStyles.title}>Histórico</Text>
             </View>
         </View>
     )

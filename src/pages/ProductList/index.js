@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 
 import styles from './styles'
+import commonStyles from '../../commonStyles'
 
 import Product from '../../components/Product'
 import Header from '../../components/Header'
@@ -34,8 +35,8 @@ export default function ProductList ({ navigation, route }){
 
             <Header icon="arrow-left" onPress={() => navigation.goBack()}/>
 
-            <View style={styles.titleContainer}>
-                <Text style={styles.title}>{route.params.name}</Text>
+            <View style={commonStyles.titleContainer}>
+                <Text style={commonStyles.title}>{route.params.name}</Text>
             </View>
 
             <FlatList 

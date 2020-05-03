@@ -1,7 +1,5 @@
 import {StyleSheet, Dimensions} from 'react-native'
 
-import commonStyles from '../../commonStyles'
-
 export default styles = StyleSheet.create({
     container: {
         width: Dimensions.get('window').width / 2 - 64,

@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, AsyncStorage, Text, TouchableOpacity, Alert } from 'react-native'
 import { Feather } from '@expo/vector-icons'
 
 import {
@@ -17,24 +17,93 @@ import {
     DrawerItem
 } from '@react-navigation/drawer'
 
+function LoginContainer({ token, onLogin, onRegister }){
+
+    if(token !== null){
+        return (
+            <View style={{flexDirection: "row", marginTop: 15}}>
+                <Avatar.Image 
+                    source={{
+                        uri: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'
+                    }}
+                    size={70}
+                />
+                <View style={{marginLeft: 15, flexDirection: "column"}}>
+                    <Title style={styles.title}>Petrus Pierre</Title>
+                    <Caption style={styles.caption}>Pontuação: 120</Caption>
+                </View>
+            </View>
+        )
+    } else {
+        return(
+            <View style={{padding:8}}>
+                <Text style={{fontSize: 18, color:"#fff", marginTop: 8, fontWeight: "bold"}}>Bem vindo!</Text>
+
+                <View style={{flexDirection: "row", marginTop: 15}}>
+                    <TouchableOpacity style={{
+                        backgroundColor: "#fff",
+                        padding: 8,
+                        borderRadius: 8,
+                        marginRight: 16,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flex: 1,
+                    }} onPress={onLogin}>
+                        <Text style={{fontWeight: "bold"}}>LOGIN</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={{
+                        backgroundColor: "#fff",
+                        padding: 8,
+                        borderRadius: 8,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flex: 1,
+                    }} onPress={onRegister}>
+                        <Text style={{fontWeight: "bold"}}>CADASTRO</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        )
+    }
+}
+
 export default function DrawerContent(props) {
+
+    const [token, setToken] = useState(null)
+    
+    useEffect(() => {
+        setInterval(async () => {
+            setToken(await AsyncStorage.getItem('token'))
+        }, 1000)
+    })
+
+    async function handleLogin(){
+        props.navigation.navigate('Auth', {type: 'Login'})
+        // await AsyncStorage.setItem('token', '123')
+        // setToken('123')
+    }
+
+    async function handleRegister(){
+        props.navigation.navigate('Auth', {type: 'Cadastro'})
+    }
+
+    async function handleLogout() {
+        const value = await AsyncStorage.getItem('token')
+        if(value !== null){
+            await AsyncStorage.removeItem('token')
+            setToken(null)
+        } else {
+            Alert.alert('Erro', 'Você precisa fazer login primeiro.')
+        }
+    }
+
     return (
         <View style={{flex: 1}}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <View style={{flexDirection: "row", marginTop: 15}}>
-                            <Avatar.Image 
-                                source={{
-                                    uri: 'https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png'
-                                }}
-                                size={70}
-                            />
-                            <View style={{marginLeft: 15, flexDirection: "column"}}>
-                                <Title style={styles.title}>Petrus Pierre</Title>
-                                <Caption style={styles.caption}>Pontuação: 120</Caption>
-                            </View>
-                        </View>
+                        <LoginContainer token={token} onLogin={handleLogin} onRegister={handleRegister}/>
                     </View>
 
                     <Drawer.Section style={styles.drawerSection}>
@@ -58,7 +127,13 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="Meu perfil"
-                            onPress={() => {props.navigation.navigate('Profile', {name: "Petrus Pierre", mine: true})}}
+                            onPress={() => {
+                                if(token){
+                                    props.navigation.navigate('Profile', {name: "Petrus Pierre", mine: true})
+                                } else {
+                                    handleLogin()
+                                }    
+                            }}
                         />
                         <DrawerItem 
                             icon={({color, size}) => (
@@ -110,19 +185,21 @@ export default function DrawerContent(props) {
                     </Drawer.Section>
                 </View>
             </DrawerContentScrollView>
-            <Drawer.Section style={styles.bottomDrawerSection}>
-                <DrawerItem 
-                    icon={({color, size}) => (
-                        <Feather 
-                            name="log-out"
-                            color={color}
-                            size={size}
-                        />
-                    )}
-                    label="Sair"
-                    onPress={() => {}}
-                />
-            </Drawer.Section>
+            {token && 
+                <Drawer.Section style={styles.bottomDrawerSection}>
+                    <DrawerItem 
+                        icon={({color, size}) => (
+                            <Feather 
+                                name="log-out"
+                                color={color}
+                                size={size}
+                            />
+                        )}
+                        label="Sair"
+                        onPress={handleLogout}
+                    />
+                </Drawer.Section>
+            }
         </View>
     )
 }

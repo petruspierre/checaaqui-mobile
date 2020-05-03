@@ -8,10 +8,7 @@ import {
   Alert
 } from 'react-native'
 
-import { Feather } from '@expo/vector-icons'
-
 import styles from './styles'
-import commonStyles from '../../commonStyles'
 
 import Review from '../../components/Review'
 import Header from '../../components/Header'
@@ -40,7 +37,7 @@ export default function Profile({ navigation, route }){
   return (
     <View style={styles.container}>
 
-      <Header icon="arrow-left" onPress={() => navigation.goBack()}/>
+      {!route.params.mine ? <Header icon="arrow-left" onPress={() => navigation.goBack()}/>:<Header icon="menu" onPress={() => navigation.openDrawer()}/>}
 
       <View style={styles.header}>
         <View style={styles.bordinha}>

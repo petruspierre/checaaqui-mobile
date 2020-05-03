@@ -1,13 +1,12 @@
 import { StyleSheet, Dimensions } from 'react-native'
 
-import Constants from 'expo-constants'
 import commonStyles from '../../commonStyles'
 
 export default styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginTop: Constants.statusBarHeight,
+    marginTop: commonStyles.metrics.statusBar,
     fontFamily: commonStyles.fontFamily,
     backgroundColor: "#fff"
   },

@@ -13,8 +13,6 @@ import {Feather, FontAwesome} from '@expo/vector-icons'
 import styles from './styles.js'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
-import commonStyles from '../../commonStyles'
-
 import Review from '../../components/Review'
 
 export default function Product({navigation, route}){

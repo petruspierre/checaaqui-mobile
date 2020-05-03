@@ -3,6 +3,7 @@ import {View, FlatList, TouchableOpacity, Image, Text} from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 
 import styles from './styles'
+import commonStyles from '../../commonStyles'
 
 import Header from '../../components/Header'
 
@@ -43,8 +44,8 @@ export default function Ranking({ navigation }){
     <View style={styles.container}>
       <Header icon="menu" onPress={() => navigation.openDrawer()}/>
 
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Ranking</Text>
+      <View style={commonStyles.titleContainer}>
+        <Text style={commonStyles.title}>Ranking</Text>
       </View>
 
       <FlatList 
