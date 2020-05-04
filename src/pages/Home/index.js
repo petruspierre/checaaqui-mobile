@@ -1,9 +1,10 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {
   View,
   Text,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  FlatList
 } from 'react-native'
 
 import { LinearGradient } from 'expo-linear-gradient'
@@ -15,19 +16,52 @@ import styles from './styles'
 
 import Categories from '../../components/Categories'
 import Header from '../../components/Header'
+import Product from '../../components/Product'
+import UserRanking from '../../components/UserRanking'
+import Loading from '../../components/Loading'
 
 import logoEletrodomestico from '../../../assets/icons/eletrodomestico.png'
 import logoTelevisao from '../../../assets/icons/televisao.png'
-import logoModa from '../../../assets/icons/camisa.png'
+import logoCelular from '../../../assets/icons/celular.png'
 import logoMoveis from '../../../assets/icons/moveis.png'
 import logoEsportes from '../../../assets/icons/bola.png'
 import logoJogos from '../../../assets/icons/jogo.png'
+
+import api from '../../services/api'
 
 export default function Home({ navigation }){
 
   const [checked, setChecked] = useState('produto')
   const [placeholder, setPlaceHolder] = useState('Digite o nome do produto')
   const [search, setSearch] = useState('')
+  const [categoriesVisible, setCategoriesVisible] = useState(true)
+  const [loading, setLoading] = useState(false)
+
+  const [productList, setProductList] = useState([])
+  const [attendantsList, setAttendantsList] = useState([])
+
+  async function handleSearch(){
+    if(search){
+      setLoading(true)
+      setCategoriesVisible(false)
+
+      if(checked === 'produto'){
+        const response = await api.get(`/products/?name=${search}`)
+  
+        setProductList(response.data.results)
+      } else {
+        const response = await api.get(`/users/?name=${search}`)
+  
+        console.log(response.data.results)
+        setAttendantsList(response.data.results)
+      }
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    setCategoriesVisible(true)
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -70,27 +104,64 @@ export default function Home({ navigation }){
               style={styles.input}
               value={search}
               placeholder={placeholder}
-              onChangeText={text => setSearch(text)}
+              onChangeText={text => {
+                setSearch(text)
+              }}
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity style={styles.button} onPress={handleSearch}>
               <Feather name="search" size={24} color="#fff" />
             </TouchableOpacity>
           </View>
         </View>
       </LinearGradient>
 
-      <View style={styles.categoriesContainer}>
-        <Categories title="Eletrodomésticos" image={logoEletrodomestico}/>
-        <Categories title="Televisões" image={logoTelevisao}/>
-      </View>
-      <View style={styles.categoriesContainer}>
-        <Categories title="Moda" image={logoModa}/>
-        <Categories title="Móveis" image={logoMoveis}/>
-      </View>
-      <View style={styles.categoriesContainer}>
-        <Categories title="Esporte e lazer" image={logoEsportes}/>
-        <Categories title="Jogos" image={logoJogos}/>
-      </View>
+      {
+        categoriesVisible &&
+        (
+          <View>
+            <View style={styles.categoriesContainer}>
+              <Categories title="Eletrodomésticos" image={logoEletrodomestico}/>
+              <Categories title="Televisões" image={logoTelevisao}/>
+            </View>
+            <View style={styles.categoriesContainer}>
+              <Categories title="Celulares" image={logoCelular}/>
+              <Categories title="Móveis" image={logoMoveis}/>
+            </View>
+            <View style={styles.categoriesContainer}>
+              <Categories title="Esporte e Lazer" image={logoEsportes}/>
+              <Categories title="Jogos" image={logoJogos}/>
+            </View>
+          </View>
+        )
+      }
+
+      { !categoriesVisible && loading && <Loading />}
+
+      {
+        !categoriesVisible && !loading && checked === 'produto' && 
+        (
+          productList.length > 0 ?
+          <FlatList 
+            data={productList}
+            renderItem={({item}) => <Product title={item.name} type={item.product_type} image={item.image}/>}
+            keyExtractor={item => String(item.name)}
+          /> :
+          <Text style={{marginTop: 80}}>Nenhum resultado encontrado com sua pesquisa</Text>
+        )
+      }
+
+      {
+        !categoriesVisible && !loading && checked === 'atendente' && 
+        (
+          attendantsList.length > 0 ?
+          <FlatList 
+            data={attendantsList}
+            renderItem={({item}) => <UserRanking name={item.username} score={item.profile.score} points={item.profile.points}/>}
+            keyExtractor={item => String(item.name)}
+          /> :
+          <Text style={{marginTop: 80}}>Nenhum resultado encontrado com sua pesquisa</Text>
+        )
+      }
       
     </View>
   )

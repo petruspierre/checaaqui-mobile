@@ -18,7 +18,7 @@ import {
     DrawerItem
 } from '@react-navigation/drawer'
 
-function LoginContainer({ token, onLogin, onRegister }){
+function LoginContainer({ token, onLogin, onRegister, username, points }){
 
     if(token !== null){
         return (
@@ -30,8 +30,8 @@ function LoginContainer({ token, onLogin, onRegister }){
                     size={70}
                 />
                 <View style={{marginLeft: 15, flexDirection: "column"}}>
-                    <Title style={styles.title}>Petrus Pierre</Title>
-                    <Caption style={styles.caption}>Pontuação: 120</Caption>
+                    <Title style={styles.title}>{username}</Title>
+                    <Caption style={styles.caption}>Pontuação: {points}</Caption>
                 </View>
             </View>
         )
@@ -72,8 +72,23 @@ function LoginContainer({ token, onLogin, onRegister }){
 export default function DrawerContent(props) {
 
     const [token, setToken] = useState(null)
-    
+    const [username, setUsername] = useState('')
+    const [points, setPoints] = useState('')
+    const [score, setScore] = useState('')
+
+    async function loadStats(){
+        const profile = await AsyncStorage.getItem('profile')
+        const profileJson =  JSON.parse(profile)
+
+        setUsername(profileJson.username)
+        setPoints(profileJson.points)
+        setScore(profileJson.score)
+    }
+
     useEffect(() => {
+        if(token) {
+            loadStats()
+        }
         setInterval(async () => {
             setToken(await AsyncStorage.getItem('token'))
         }, 1000)
@@ -99,6 +114,7 @@ export default function DrawerContent(props) {
         const value = await AsyncStorage.getItem('token')
         if(value !== null){
             await AsyncStorage.removeItem('token')
+            await AsyncStorage.removeItem('profile')
             setToken(null)
         } else {
             Alert.alert('Erro', 'Você precisa fazer login primeiro.')
@@ -110,7 +126,7 @@ export default function DrawerContent(props) {
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <LoginContainer token={token} onLogin={handleLogin} onRegister={handleRegister}/>
+                        <LoginContainer token={token} onLogin={handleLogin} onRegister={handleRegister} username={username} points={points}/>
                     </View>
 
                     <Drawer.Section style={styles.drawerSection}>
@@ -136,7 +152,7 @@ export default function DrawerContent(props) {
                             label="Meu perfil"
                             onPress={() => {
                                 if(token){
-                                    props.navigation.navigate('Profile', {name: "Petrus Pierre", mine: true})
+                                    props.navigation.navigate('Profile', {username: username, mine: true})
                                 } else {
                                     handleLogin()
                                 }    
@@ -154,6 +170,7 @@ export default function DrawerContent(props) {
                             onPress={() => {props.navigation.navigate('Ranking')}}
                         />
                         <DrawerItem 
+                            unmountOnBlur={true}    
                             icon={({color, size}) => (
                                 <Feather 
                                     name="clock"
@@ -162,7 +179,7 @@ export default function DrawerContent(props) {
                                 />
                             )}
                             label="Histórico"
-                            onPress={() => {props.navigation.navigate('History')}}
+                            onPress={() => {props.navigation.navigate('History', {refresh: true})}}
                         />
                     </Drawer.Section>
                                 

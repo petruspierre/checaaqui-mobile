@@ -1,24 +1,228 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 
 import {
     TouchableOpacity,
     View,
     Text,
+    AsyncStorage,
+    FlatList,
+    Modal,
+    TouchableWithoutFeedback,
+    TextInput,
 } from 'react-native'
 
 import Header from '../../components/Header'
+import Attendance from '../../components/Attendance'
+import Loading from '../../components/Loading'
 
 import styles from './styles'
 import commonStyles from '../../commonStyles'
 
-export default function History({navigation}) {
-    return (
-        <View style={styles.container}>
-            <Header icon="menu" onPress={() => navigation.openDrawer()}/>
+import api from '../../services/api'
 
-            <View style={commonStyles.titleContainer}>
-                <Text style={commonStyles.title}>Histórico</Text>
+export default function History({navigation, route}) {
+
+    const [attendancesAsClient, setAttendancesAsClient] = useState([])
+    const [attendancesAsAttendant, setAttendancesAsAttendant] = useState([])
+
+    const [modalVisible, setModalVisible] = useState(false)
+    const [grade, setGrade] = useState('')
+    const [error, setError] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [selectedId, setSelectedId] = useState(0)
+    const [loading, setLoading] = useState(false)
+    const [type, setType] = useState('client')
+
+    async function getAttendancesAsClient(){
+
+        setLoading(true)
+        const token = await AsyncStorage.getItem('token')
+
+        console.log(token)
+
+        const response = await api.get('/attendance/client/', {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+
+        setAttendancesAsClient(response.data.results)
+
+        console.log(response.data)
+
+    }
+
+    async function getAttendancesAttendant(){
+
+        const token = await AsyncStorage.getItem('token')
+
+        console.log(token)
+
+        const response = await api.get('/attendance/attendant', {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        })
+
+        setAttendancesAsAttendant(response.data.results)
+
+        console.log(response.data)
+
+        setLoading(false)
+
+    }
+
+    async function handleEvaluate() {
+
+        if(!grade) {
+            setError(true)
+            setErrorMessage("Dê uma nota")
+        } else {
+            setError(false)
+
+            const data = {
+                score: parseFloat(grade.replace(',','.'))
+            }
+
+            
+            const token = await AsyncStorage.getItem('token')
+            console.log(data)
+            
+            if(type === 'client'){
+                const response = await api.put(`attendance/${selectedId}/client-avaliate/`, data, {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                })
+                console.log(response.data)
+            } else {
+                const response = await api.put(`attendance/${selectedId}/attendant-avaliate/`, data, {
+                    headers: {
+                        Authorization: `Token ${token}`
+                    }
+                })
+                console.log(response.data)
+            }
+    
+            setModalVisible(false)
+        }
+        getAttendancesAsClient()
+        getAttendancesAttendant()
+    }
+
+    useEffect(() => {
+        setType('')
+        setAttendancesAsClient([])
+        getAttendancesAsClient()
+        getAttendancesAttendant()
+    }, [route.params.refresh])
+
+    if(loading){
+        return(
+            <View style={styles.container}>
+                <Header icon="menu" onPress={() => navigation.openDrawer()}/>
+        
+                <View style={commonStyles.titleContainer}>
+                    <Text style={commonStyles.title}>Histórico</Text>
+                </View>
+                <Loading />
             </View>
-        </View>
-    )
+        )
+    }
+    else {
+        return (
+            <View style={styles.container}>
+    
+                <Modal 
+                    animationType="fade"
+                    transparent={true}
+                    visible={modalVisible}>
+    
+                    <View style={{flex: 1}}>
+                        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+                            <View style={{flex: 0.5, backgroundColor: "rgba(0,0,0,0.5)"}}/> 
+                        </TouchableWithoutFeedback>
+    
+                        <View style={styles.modalContainer}>
+                            <Text style={styles.title}>Avalie este atendimento</Text>
+                            {error && <Text style={{color:'red', marginBottom: 16}}>{errorMessage}</Text>}
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Ex.: 4.6 (máx 5)"
+                                keyboardType="number-pad" 
+                                value={grade}
+                                onChangeText={text => setGrade(text)} />
+                            <TouchableOpacity style={styles.modalButton} onPress={handleEvaluate}>
+                                <Text style={styles.modalButtonText}>AVALIAR</Text>
+                            </TouchableOpacity>
+                        </View>
+    
+                        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}> 
+                            <View style={{flex: 0.5, backgroundColor: "rgba(0,0,0,0.5)"}}/> 
+                        </TouchableWithoutFeedback>
+                    </View>
+    
+                </Modal>
+    
+                <Header icon="menu" onPress={() => navigation.openDrawer()}/>
+    
+                <View style={commonStyles.titleContainer}>
+                    <Text style={commonStyles.title}>Histórico</Text>
+                </View>
+
+                { !(attendancesAsClient.length === 0) &&
+                <View style={{alignItems: "center"}}>
+                    <Text style={{fontSize: 22}}>Atendimentos como cliente</Text>
+                    <FlatList 
+                        data={attendancesAsClient}
+                        renderItem={({item}) => 
+                            <Attendance 
+                                id={item.id} 
+                                client={item.client.username} 
+                                attendant={item.attendant.username} 
+                                attendantWasEvaluated={item.attendant_was_evaluated}
+                                product={item.product}
+                                createdAt={item.created_at}
+                                onPress={() => {
+                                    setSelectedId(item.id)
+                                    setError(false)
+                                    setModalVisible(true)
+                                    setType('client')
+                                    setGrade('')
+                                }}
+                                attendant={false}
+                                attendantScore={item.attendant_score}/>}
+                        keyExtractor={(item) => String(item.id)}
+                        />
+                </View>
+                }
+                
+                { !(attendancesAsAttendant.length === 0) &&
+                <View style={{alignItems: "center"}}>
+                    <Text style={{fontSize: 22}}>Atendimentos como atendente</Text>
+                    <FlatList 
+                        data={attendancesAsAttendant}
+                        renderItem={({item}) => 
+                            <Attendance 
+                                id={item.id} 
+                                client={item.client.username}
+                                attendant={item.attendant.username}  
+                                attendantWasEvaluated={item.attendant_was_evaluated}
+                                product={item.product}
+                                createdAt={item.created_at}
+                                onPress={() => {
+                                    setSelectedId(item.id)
+                                    setError(false)
+                                    setModalVisible(true)
+                                    setType('attendant')
+                                    setGrade('')
+                                }}
+                                attendant={true}
+                                clientScore={item.client_score}/>}
+                        keyExtractor={(item) => String(item.id)}
+                        />
+                </View>}
+            </View>
+        )
+    }
 }

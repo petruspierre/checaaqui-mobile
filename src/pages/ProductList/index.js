@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {
     View,
     FlatList,
@@ -8,43 +8,57 @@ import {
 import styles from './styles'
 import commonStyles from '../../commonStyles'
 
+import api from '../../services/api'
+
 import Product from '../../components/Product'
 import Header from '../../components/Header'
+import Loading from '../../components/Loading'
 
 export default function ProductList ({ navigation, route }){
 
-    const [products, setProducts] = useState([
-        {
-            id: 1,
-            title: 'Smart TV LED 43 Samsung 43RU7100 Ultra HD 4K',
-            image: {
-                uri: 'https://images-americanas.b2w.io/produtos/01/00/img/134240/6/134240675_1SZ.jpg'
-            }
-        },
-        {
-            id: 2,
-            title: 'TV LED 32" Philco PTV32G50D HD',
-            image: {
-                uri: 'https://images-americanas.b2w.io/produtos/01/00/img/134574/7/134574798_1GG.jpg'
-            }
-        },
-    ])
+    const [products, setProducts] = useState([])
+    const [loading, setLoading] = useState(false)
 
-    return(
-        <View style={styles.container}>
+    async function loadProducts(){
+        setLoading(true)
+        const response = await api.get(`/products/?product_type=${route.params.name}`)
 
+        setProducts(response.data.results)
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        setProducts([])
+        loadProducts()
+    }, [route.params.name])
+
+    if(loading){
+        return (
+          <View style={styles.container}>
             <Header icon="arrow-left" onPress={() => navigation.goBack()}/>
-
             <View style={commonStyles.titleContainer}>
                 <Text style={commonStyles.title}>{route.params.name}</Text>
             </View>
-
-            <FlatList 
-                data={products}
-                showsVerticalScrollIndicator={false}
-                renderItem={({item}) => <Product title={item.title} image={item.image} />}
-                keyExtractor={item => String(item.id)}
-            />
-        </View>
-    )
+            <Loading />
+          </View>
+        )
+      } else {
+          return(
+              <View style={styles.container}>
+      
+                  <Header icon="arrow-left" onPress={() => navigation.goBack()}/>
+      
+                  <View style={commonStyles.titleContainer}>
+                      <Text style={commonStyles.title}>{route.params.name}</Text>
+                  </View>
+      
+                  <FlatList 
+                      data={products}
+                      showsVerticalScrollIndicator={false}
+                      renderItem={({item}) => <Product title={item.name} image={item.url_image} type={route.params.name}/>}
+                      keyExtractor={item => String(item.name)}
+                  />
+              </View>
+          )
+      }
 }

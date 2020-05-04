@@ -83,9 +83,25 @@ export default styles = StyleSheet.create({
       justifyContent: "center",
       alignItems: "center",
       marginTop: "auto",
+      marginRight: "auto",
+      marginLeft: "auto"
   },
   textButton: {
       fontSize: 20,
       color: commonStyles.colors.light
+  },
+  footer: {
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: "#444",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  like: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 6,
+    marginRight: "auto"
   }
 })

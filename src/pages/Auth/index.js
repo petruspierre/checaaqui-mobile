@@ -8,6 +8,8 @@ import Header from '../../components/Header'
 import styles from './styles'
 import commonStyles from '../../commonStyles'
 
+import api from '../../services/api'
+
 export default function Auth({ navigation, route }){
 
   const [type, setType] = useState('Login')
@@ -22,18 +24,78 @@ export default function Auth({ navigation, route }){
   const [errorMessage, setErrorMessage] = useState('')
   const [visiblePassword, setVisiblePassword] = useState(false)
 
+  async function loginUser(){
+    try {
+      const data = {
+        username,
+        password
+      }
+
+      const response = await api.post('/users/token-login/', data);
+      console.log(response.data.token)
+
+      return response.data.token
+
+    } catch(err){
+      console.err(err)
+    }
+  }
+
+  async function setupProfile(token){
+    await AsyncStorage.removeItem('profile')
+
+    const response = await api.get('/users/self', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+
+    const profile = {
+      id: response.data.id,
+      username: response.data.username,
+      score: response.data.profile.score,
+      points: response.data.profile.points,
+      is_premium: response.data.profile.is_premium
+    }
+
+    await AsyncStorage.setItem('profile', JSON.stringify(profile))
+  }
+
   async function handleSubmitLogin(){
     if(!username || !password){
       setError(true)
       setErrorMessage('Preencha todos os campos')
     } else {
       setError(false)
-      await AsyncStorage.setItem('token', '123')
+
+      const token = await loginUser()
+      await AsyncStorage.setItem('token', token)
+      await setupProfile(token)
+
       navigation.goBack()
     }
   }
 
-  function handleSubmitRegister(){
+  async function registerUser(){
+    try {
+      const data = {
+        username,
+        password,
+        profile: {
+          phone: phone.trim(),
+          email
+        }
+      }
+
+      const response = await api.post('/users/', data);
+      console.log(response.data.message)
+
+    } catch(err) {
+      console.error(err)
+    }
+  }
+
+  async function handleSubmitRegister(){
     if(!username || !email || !phone || !password || !confirmPassword){
       setError(true)
       setErrorMessage('Preencha todos os campos')
@@ -58,11 +120,26 @@ export default function Auth({ navigation, route }){
       setErrorMessage('Digite um email válido')
     } else {
       setError(false)
+
+      await registerUser()
+
       setType('Confirmação')
     }
   }
 
-  function handleConfirmation(){
+  async function handleConfirmation(){
+
+    try {
+      const data = {
+        token: confirmation
+      }
+
+      const response = await api.post('/users/authenticate-email/', data)
+      console.log(response.data.message)
+    } catch (err) {
+      console.error(err)
+    }
+
     setType('Login')
   }
 
@@ -119,8 +196,12 @@ export default function Auth({ navigation, route }){
         <TouchableOpacity onPress={handleSwitchType}>
           <Text style={styles.register}>Não possuo cadastro</Text>
         </TouchableOpacity>
+        <Text>ou</Text>
+        <TouchableOpacity onPress={() => setType('Confirmação')}>
+          <Text style={[styles.register, {marginTop: 0}]}>Confirmar registro</Text>
+        </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={handleSubmitLogin}>
+        <TouchableOpacity style={[styles.button]} onPress={handleSubmitLogin}>
           <Text style={styles.buttonText}>ENVIAR</Text>
         </TouchableOpacity>
       </View>

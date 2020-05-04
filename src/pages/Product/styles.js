@@ -160,12 +160,43 @@ export default styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 16,
   },
   modalButtonText:{
     color: "white", 
     fontWeight: "bold",
     fontSize: 20,
     textAlignVertical: "center",
+  },
+  scoreInput: {
+    height: 50,
+    width: 130,
+    padding: 8,
+    backgroundColor: "#f9f9f9",
+    fontSize: 16,
+    textAlign: "center",
+
+    borderRadius: 16,
+
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+  },
+  modalCaption: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  modalAditionalContainer: {
+    width: Dimensions.get('window').width - 32,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center"
   }
   
 })
