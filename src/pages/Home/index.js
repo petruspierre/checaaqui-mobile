@@ -151,7 +151,7 @@ export default function Home({ navigation }){
           productList.length > 0 ?
           <FlatList 
             data={productList}
-            renderItem={({item}) => <Product title={item.name} type={item.product_type} image={item.image}/>}
+            renderItem={({item}) => <Product title={item.name} type={item.product_type} image={item.url_image}/>}
             keyExtractor={item => String(item.name)}
           /> :
           <Text style={{marginTop: 80}}>Nenhum resultado encontrado com sua pesquisa</Text>
@@ -164,7 +164,7 @@ export default function Home({ navigation }){
           attendantsList.length > 0 ?
           <FlatList 
             data={attendantsList}
-            renderItem={({item}) => <UserRanking name={item.username} score={item.profile.score} points={item.profile.points}/>}
+            renderItem={({item}) => <UserRanking name={item.username} id={item.id} score={item.profile.score} points={item.profile.points}/>}
             keyExtractor={item => String(item.username)}
           /> :
           <Text style={{marginTop: 80}}>Nenhum resultado encontrado com sua pesquisa</Text>

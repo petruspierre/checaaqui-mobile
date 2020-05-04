@@ -53,7 +53,7 @@ export default function Profile({ navigation, route }){
       product: route.params.product
     }
 
-    console.log(data)
+    //console.log(data)
 
     const token = await AsyncStorage.getItem('token')
 
@@ -68,7 +68,7 @@ export default function Profile({ navigation, route }){
         }
       })
   
-      console.log(response.data)
+      //console.log(response.data)
     }
 
   }
@@ -79,7 +79,7 @@ export default function Profile({ navigation, route }){
 
     const token = await AsyncStorage.getItem('token')
 
-    const response = await api.get(`/users/self`, {
+    const response = await api.get(`/users/${route.params.id}`, {
       headers: {
         Authorization: `Token ${token}`
       }
@@ -140,7 +140,7 @@ export default function Profile({ navigation, route }){
         <FlatList 
             data={reviews}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => <Review name={item.product} shop={item.formated_store[1]} review={item.description} profile={true}/>}
+            renderItem={({ item }) => <Review name={item.product} shop={item.formated_store[1]} review={item.description} grade={item.grade} profile={true}/>}
             keyExtractor={item => String(item.id)}
             horizontal={true}
           />

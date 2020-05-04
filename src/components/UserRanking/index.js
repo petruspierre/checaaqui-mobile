@@ -12,7 +12,7 @@ export default function UserRanking( props ){
   const navigation = useNavigation()
 
   return (
-    <TouchableOpacity style={styles.userContainer} onPress={() => navigation.navigate('Profile', {username: props.name, mine: false, ranking: true})}>
+    <TouchableOpacity style={styles.userContainer} onPress={() => navigation.navigate('Profile', {username: props.name, id:props.id, mine: false, ranking: true})}>
       <Image style={styles.userImage} source={{uri: "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"}}/>
       <Text style={styles.userName}>{props.name}</Text>
       <View style={{justifyContent: "center", alignItems: "center"}}>

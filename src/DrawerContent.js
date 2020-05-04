@@ -73,25 +73,27 @@ export default function DrawerContent(props) {
 
     const [token, setToken] = useState(null)
     const [username, setUsername] = useState('')
+    const [id, setId] = useState(0)
     const [points, setPoints] = useState('')
     const [score, setScore] = useState('')
 
     async function loadStats(){
-        const profile = await AsyncStorage.getItem('profile')
-        const profileJson =  JSON.parse(profile)
-
-        setUsername(profileJson.username)
-        setPoints(profileJson.points)
-        setScore(profileJson.score)
+        if(token !== null){
+            const profile = await AsyncStorage.getItem('profile')
+            const profileJson =  JSON.parse(profile)
+    
+            setUsername(profileJson.username)
+            setId(profileJson.id)
+            setPoints(profileJson.points)
+            setScore(profileJson.score)
+        }
     }
 
     useEffect(() => {
-        if(token) {
-            loadStats()
-        }
         setInterval(async () => {
             setToken(await AsyncStorage.getItem('token'))
-        }, 1000)
+        }, 2000)
+        loadStats()
     })
 
     function handleContact() {
@@ -111,22 +113,17 @@ export default function DrawerContent(props) {
     }
 
     async function handleLogout() {
-        const value = await AsyncStorage.getItem('token')
-        if(value !== null){
-            await AsyncStorage.setItem('token', null)
-            const profile = {
-                id: 0,
-                username: '',
-                score: '',
-                points: '',
-                is_premium: false
-              }
-          
-              await AsyncStorage.setItem('profile', JSON.stringify(profile))
-            setToken(null)
-        } else {
-            Alert.alert('Erro', 'Você precisa fazer login primeiro.')
+        setToken(null)
+        await AsyncStorage.removeItem('token')
+        const profile = {
+            id: 0,
+            username: '',
+            score: '',
+            points: '',
+            is_premium: false
         }
+        
+        await AsyncStorage.setItem('profile', JSON.stringify(profile))
     }
 
     return (
@@ -160,7 +157,7 @@ export default function DrawerContent(props) {
                             label="Meu perfil"
                             onPress={() => {
                                 if(token){
-                                    props.navigation.navigate('Profile', {username: username, mine: true})
+                                    props.navigation.navigate('Profile', {username, mine: true, id})
                                 } else {
                                     handleLogin()
                                 }    

@@ -36,7 +36,7 @@ export default function Product({navigation, route}){
   async function getProductDetails(){
     setLoading(true)
     const response = await api.get(`products/detail/?product=${route.params.title}`)
-    console.log(response.data.reviews)
+    //console.log(response.data.reviews)
     setReviews(response.data.reviews)
     setLoading(false)
   }
@@ -44,6 +44,29 @@ export default function Product({navigation, route}){
   function handleOpenModal(){
     setError(false)
     setModalVisible(true)
+  }
+
+  async function updateProfile(){
+    setLoading(true)
+
+    const token = await AsyncStorage.getItem('token')
+
+    const response = await api.get('/users/self', {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+
+    const profile = {
+      id: response.data.id,
+      username: response.data.username,
+      score: response.data.profile.score,
+      points: response.data.profile.points,
+      is_premium: response.data.profile.is_premium
+    }
+    setLoading(false)
+
+    await AsyncStorage.setItem('profile', JSON.stringify(profile))
   }
 
   async function handleSubmitReview(){
@@ -64,7 +87,7 @@ export default function Product({navigation, route}){
         product: route.params.title
       }
 
-      console.log(data)
+      //console.log(data)
   
       const token = await AsyncStorage.getItem('token')
   
@@ -75,6 +98,7 @@ export default function Product({navigation, route}){
       })
 
       setModalVisible(false)
+      updateProfile()
       getProductDetails()
     }
   }
@@ -196,7 +220,7 @@ export default function Product({navigation, route}){
           <FlatList 
             data={reviews}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => <Review id={item.id} ranking={false} product={route.params.title} likes={item.likes} name={item.author.username} shop={item.formated_store[1]} review={item.description} grade={parseFloat(item.grade)}/>}
+            renderItem={({ item }) => <Review userId={item.author.id} id={item.id} ranking={false} product={route.params.title} likes={item.likes} name={item.author.username} shop={item.formated_store[1]} review={item.description} grade={parseFloat(item.grade)}/>}
             keyExtractor={item => String(item.id)}
             horizontal={true}
           />

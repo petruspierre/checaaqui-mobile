@@ -22,6 +22,29 @@ export default function Review(props) {
         navigation.navigate('Profile', { username: props.name, mine: false, ranking: false, product: props.product })
     }
 
+    async function updateProfile(){
+        setLoading(true)
+    
+        const token = await AsyncStorage.getItem('token')
+    
+        const response = await api.get('/users/self', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+    
+        const profile = {
+          id: response.data.id,
+          username: response.data.username,
+          score: response.data.profile.score,
+          points: response.data.profile.points,
+          is_premium: response.data.profile.is_premium
+        }
+        setLoading(false)
+    
+        await AsyncStorage.setItem('profile', JSON.stringify(profile))
+      }
+
     async function handleLike(){
 
         const token = await AsyncStorage.getItem('token')
@@ -35,8 +58,8 @@ export default function Review(props) {
             }
         })
 
-
-        console.log(response.data)
+        updateProfile()
+        //console.log(response.data)
     }
 
     if(!props.profile){

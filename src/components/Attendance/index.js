@@ -5,12 +5,9 @@ import {AirbnbRating} from 'react-native-ratings'
 
 import styles from './styles'
 import Moment from 'moment'
+import 'moment/locale/pt-br'
 
 export default function Attendance(props){
-
-  useEffect(() => {
-    Moment.locale('pt-br')
-  }, [])
 
   return (
     <TouchableOpacity style={styles.container} onPress={props.onPress}>
@@ -18,7 +15,7 @@ export default function Attendance(props){
           <Text style={styles.title}>Atendimento com {props.client}</Text>
         </View>
         <Text style={styles.caption}>Produto: {props.product}</Text>
-        <Text style={styles.caption}>Pedido em: {Moment(props.createdAt).format('L')}</Text>
+        <Text style={styles.caption}>Pedido {Moment(props.createdAt).locale('pt-br').startOf(props.createdAt).fromNow()}</Text>
         {!props.attendantWasEvaluated ? <Text style={styles.caption}>Aguarde avaliação do cliente</Text> : 
         (
           <View style={{flexDirection: "row", marginTop: 8,}}>
@@ -27,7 +24,7 @@ export default function Attendance(props){
                 size={15}
                 showRating={false}
                 isDisabled={true}
-                defaultRating={props.grade}
+                defaultRating={props.clientScore}
                 starContainerStyle={{backgroundColor: "#f9f9f9"}}
             />
           </View>

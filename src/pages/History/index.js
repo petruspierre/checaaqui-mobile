@@ -67,7 +67,7 @@ export default function History({navigation, route}) {
 
         //console.log(token)
 
-        const response = await api.get('/attendance/attendant', {
+        const response = await api.get('/attendance/attendant/', {
             headers: {
                 Authorization: `Token ${token}`
             }
@@ -75,11 +75,31 @@ export default function History({navigation, route}) {
 
         setAttendancesAsAttendant(response.data.results)
 
-        //console.log(response.data)
+        //console.log(response.data.results)
 
         setLoading(false)
 
     }
+
+    async function updateProfile(){
+        const token = await AsyncStorage.getItem('token')
+
+        const response = await api.get('/users/self/', {
+          headers: {
+            Authorization: `Token ${token}`
+          }
+        })
+    
+        const profile = {
+          id: response.data.id,
+          username: response.data.username,
+          score: response.data.profile.score,
+          points: response.data.profile.points,
+          is_premium: response.data.profile.is_premium
+        }
+    
+        await AsyncStorage.setItem('profile', JSON.stringify(profile))
+      }
 
     async function handleEvaluate() {
 
@@ -97,9 +117,12 @@ export default function History({navigation, route}) {
             const token = await AsyncStorage.getItem('token')
             //console.log(data)
             
+            console.log(token)
+
             if(type === 'client'){
                 const response = await api.put(`attendance/${selectedId}/client-avaliate/`, data, {
                     headers: {
+                        'Content-Type': 'application/json',
                         Authorization: `Token ${token}`
                     }
                 })
@@ -113,10 +136,14 @@ export default function History({navigation, route}) {
                 //console.log(response.data)
             }
     
+            await updateProfile()
             setModalVisible(false)
+            if(showMode === 'cliente') {
+                getAttendancesAttendant()
+            } else {
+                getAttendancesAsClient()
+            }
         }
-        getAttendancesAsClient()
-        getAttendancesAttendant()
     }
 
     function handleChangeShowMode(){

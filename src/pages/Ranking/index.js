@@ -58,7 +58,7 @@ export default function Ranking({ navigation }){
           }}
           refreshing={refreshRank}
           data={ranking}
-          renderItem={({item}) => <UserRanking name={item.username} score={(item.profile.score).toFixed(2)} points={item.profile.points}/>}
+          renderItem={({item}) => <UserRanking name={item.username} id={item.id} score={(item.profile.score).toFixed(2)} points={item.profile.points}/>}
           keyExtractor={item => String(item.id)}
         />
       </View>

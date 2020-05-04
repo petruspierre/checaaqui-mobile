@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {AsyncStorage, View, Text, TextInput, TouchableOpacity, TouchableHighlight} from 'react-native'
+import {AsyncStorage, View, Text, TextInput, TouchableOpacity, TouchableHighlight, Alert} from 'react-native'
 
 import {Feather} from '@expo/vector-icons'
 
@@ -34,12 +34,12 @@ export default function Auth({ navigation, route }){
       }
 
       const response = await api.post('/users/token-login/', data);
-      console.log(response.data.token)
+      //console.log(response.data.token)
 
       return response.data.token
 
     } catch(err){
-      console.err(err)
+      Alert.alert(err)
     }
   }
 
@@ -93,10 +93,10 @@ export default function Auth({ navigation, route }){
       }
 
       const response = await api.post('/users/', data);
-      console.log(response.data.message)
+      //console.log(response.data.message)
 
     } catch(err) {
-      console.error(err)
+      Alert.alert(err)
     }
   }
 
@@ -149,10 +149,10 @@ export default function Auth({ navigation, route }){
         }
   
         const response = await api.post('/users/authenticate-email/', data)
-        console.log(response.data.message)
+        //console.log(response.data.message)
         setLoading(false)
       } catch (err) {
-        console.error(err)
+        Alert.alert(err)
       }
   
       setType('Login')
