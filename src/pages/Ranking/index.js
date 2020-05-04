@@ -16,6 +16,7 @@ export default function Ranking({ navigation }){
 
   const [ranking, setRanking] = useState([])
   const [loading, setLoading] = useState(false)
+  const [refreshRank, setRefreshRank] = useState(false)
 
   async function loadRanking(){
     setLoading(true)
@@ -50,6 +51,12 @@ export default function Ranking({ navigation }){
         </View>
   
         <FlatList 
+          onRefresh={() => {
+            setRefreshRank(true)
+            loadRanking()
+            setRefreshRank(false)
+          }}
+          refreshing={refreshRank}
           data={ranking}
           renderItem={({item}) => <UserRanking name={item.username} score={(item.profile.score).toFixed(2)} points={item.profile.points}/>}
           keyExtractor={item => String(item.id)}

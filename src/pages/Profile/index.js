@@ -57,15 +57,20 @@ export default function Profile({ navigation, route }){
 
     const token = await AsyncStorage.getItem('token')
 
-    Alert.alert("Sucesso!", `O seu atendimento foi solicitado à ${route.params.username}. Aguarde o contato.`)
-    
-    const response = await api.post('/attendance/client/', data, {
-      headers: {
-        Authorization: `Token ${token}`
-      }
-    })
+    if(!token){
+      navigation.navigate('Auth')
+    } else {
+      Alert.alert("Sucesso!", `O seu atendimento foi solicitado à ${route.params.username}. Aguarde o contato.`)
+      
+      const response = await api.post('/attendance/client/', data, {
+        headers: {
+          Authorization: `Token ${token}`
+        }
+      })
+  
+      console.log(response.data)
+    }
 
-    console.log(response.data)
   }
 
   async function loadStats(){

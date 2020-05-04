@@ -4,6 +4,7 @@ import {AsyncStorage, View, Text, TextInput, TouchableOpacity, TouchableHighligh
 import {Feather} from '@expo/vector-icons'
 
 import Header from '../../components/Header'
+import Loading from '../../components/Loading'
 
 import styles from './styles'
 import commonStyles from '../../commonStyles'
@@ -12,6 +13,7 @@ import api from '../../services/api'
 
 export default function Auth({ navigation, route }){
 
+  const [loading, setLoading] = useState(false)
   const [type, setType] = useState('Login')
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
@@ -66,13 +68,14 @@ export default function Auth({ navigation, route }){
       setError(true)
       setErrorMessage('Preencha todos os campos')
     } else {
+      setLoading(true)
       setError(false)
 
       const token = await loginUser()
       await AsyncStorage.setItem('token', token)
       await setupProfile(token)
-
-      navigation.goBack()
+      setLoading(false)
+      navigation.navigate('Home')
     }
   }
 
@@ -119,23 +122,27 @@ export default function Auth({ navigation, route }){
       setError(true)
       setErrorMessage('Digite um email válido')
     } else {
+      setLoading(true)
       setError(false)
 
       await registerUser()
 
       setType('Confirmação')
+      setLoading(false)
     }
   }
 
   async function handleConfirmation(){
 
     try {
+      setLoading(true)
       const data = {
         token: confirmation
       }
 
       const response = await api.post('/users/authenticate-email/', data)
       console.log(response.data.message)
+      setLoading(false)
     } catch (err) {
       console.error(err)
     }
@@ -152,7 +159,20 @@ export default function Auth({ navigation, route }){
     setType(route.params.type)
   }, [route.params.type])
 
-  if(type === 'Login'){
+  if(loading){
+    return (
+      <View style={styles.container}>
+        <Header icon="menu" onPress={() => navigation.openDrawer()}/>
+
+        <View style={commonStyles.titleContainer}>
+          <Text style={commonStyles.title}>{type}</Text>
+        </View>
+
+        <Loading />
+      </View>
+    )
+  } 
+  else if(type === 'Login'){
     return (
       <View style={styles.container}>
         <Header icon="menu" onPress={() => navigation.openDrawer()}/>

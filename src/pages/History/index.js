@@ -13,6 +13,7 @@ import {
 
 import Header from '../../components/Header'
 import Attendance from '../../components/Attendance'
+import AttendanceClient from '../../components/AttendanceClient'
 import Loading from '../../components/Loading'
 
 import styles from './styles'
@@ -32,6 +33,10 @@ export default function History({navigation, route}) {
     const [selectedId, setSelectedId] = useState(0)
     const [loading, setLoading] = useState(false)
     const [type, setType] = useState('client')
+    const [refreshClient, setRefreshClient] = useState(false)
+    const [refreshAttendant, setRefreshAttendant] = useState(false)
+    const [showMode, setShowMode] = useState('cliente')
+    const [inverseShowMode, setInverseShowMode] = useState('atendente')
 
     async function getAttendancesAsClient(){
 
@@ -110,12 +115,23 @@ export default function History({navigation, route}) {
         getAttendancesAttendant()
     }
 
+    function handleChangeShowMode(){
+        if(showMode === 'cliente') {
+            setShowMode('atendente')
+            setInverseShowMode('cliente')
+        } else {
+            setShowMode('cliente')
+            setInverseShowMode('atendente')
+        }
+    }
+
     useEffect(() => {
         setType('')
         setAttendancesAsClient([])
+        setAttendancesAsAttendant([])
         getAttendancesAsClient()
         getAttendancesAttendant()
-    }, [route.params.refresh])
+    }, [])
 
     if(loading){
         return(
@@ -170,58 +186,70 @@ export default function History({navigation, route}) {
                     <Text style={commonStyles.title}>Histórico</Text>
                 </View>
 
-                { !(attendancesAsClient.length === 0) &&
-                <View style={{alignItems: "center"}}>
-                    <Text style={{fontSize: 22}}>Atendimentos como cliente</Text>
-                    <FlatList 
-                        data={attendancesAsClient}
-                        renderItem={({item}) => 
-                            <Attendance 
-                                id={item.id} 
-                                client={item.client.username} 
-                                attendant={item.attendant.username} 
-                                attendantWasEvaluated={item.attendant_was_evaluated}
-                                product={item.product}
-                                createdAt={item.created_at}
-                                onPress={() => {
-                                    setSelectedId(item.id)
-                                    setError(false)
-                                    setModalVisible(true)
-                                    setType('client')
-                                    setGrade('')
-                                }}
-                                attendant={false}
-                                attendantScore={item.attendant_score}/>}
-                        keyExtractor={(item) => String(item.id)}
-                        />
-                </View>
-                }
+                <Text style={{fontSize: 22}}>Atendimentos como {showMode}</Text>
+
+                <TouchableOpacity style={{marginVertical: 8}} onPress={handleChangeShowMode}>
+                    <Text style={{color: commonStyles.colors.primary}}>Mudar para atendimentos como {inverseShowMode}</Text>
+                </TouchableOpacity>
+
+                {showMode === 'cliente' && 
+                <FlatList 
+                onRefresh={() => {
+                    setRefreshClient(true)
+                    getAttendancesAsClient()
+                    getAttendancesAttendant()
+                    setRefreshClient(false)
+                }}
+                refreshing={refreshClient}
+                data={attendancesAsClient}
+                renderItem={({item}) => 
+                    <AttendanceClient 
+                        id={item.id} 
+                        client={item.client.username} 
+                        attendantWasEvaluated={item.attendant_was_evaluated}
+                        product={item.product}
+                        createdAt={item.created_at}
+                        onPress={() => {
+                            setSelectedId(item.id)
+                            setError(false)
+                            setModalVisible(true)
+                            setType('client')
+                            setGrade('')
+                        }}
+                        attendant={false}
+                        attendantScore={item.attendant_score}/>}
+                keyExtractor={(item) => String(item.id)}
+                />}
+                {showMode === 'atendente' &&  
+                <FlatList 
+                    onRefresh={() => {
+                        setRefreshClient(true)
+                        getAttendancesAsClient()
+                        getAttendancesAttendant()
+                        setRefreshClient(false)
+                    }}
+                    refreshing={refreshClient}
+                    data={attendancesAsAttendant}
+                    renderItem={({item}) => 
+                        <Attendance 
+                            id={item.id} 
+                            client={item.client.username}
+                            attendant={item.attendant.username}  
+                            attendantWasEvaluated={item.attendant_was_evaluated}
+                            product={item.product}
+                            createdAt={item.created_at}
+                            onPress={() => {
+                                setSelectedId(item.id)
+                                setError(false)
+                                setModalVisible(true)
+                                setType('attendant')
+                                setGrade('')
+                            }}
+                            attendant={true}
+                            clientScore={item.client_score}/>}
+                    keyExtractor={(item) => String(item.id)}
+                    />}
                 
-                { !(attendancesAsAttendant.length === 0) &&
-                <View style={{alignItems: "center"}}>
-                    <Text style={{fontSize: 22}}>Atendimentos como atendente</Text>
-                    <FlatList 
-                        data={attendancesAsAttendant}
-                        renderItem={({item}) => 
-                            <Attendance 
-                                id={item.id} 
-                                client={item.client.username}
-                                attendant={item.attendant.username}  
-                                attendantWasEvaluated={item.attendant_was_evaluated}
-                                product={item.product}
-                                createdAt={item.created_at}
-                                onPress={() => {
-                                    setSelectedId(item.id)
-                                    setError(false)
-                                    setModalVisible(true)
-                                    setType('attendant')
-                                    setGrade('')
-                                }}
-                                attendant={true}
-                                clientScore={item.client_score}/>}
-                        keyExtractor={(item) => String(item.id)}
-                        />
-                </View>}
             </View>
         )
     }
