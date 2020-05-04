@@ -15,6 +15,8 @@ import {
 import {Feather, FontAwesome} from '@expo/vector-icons'
 import styles from './styles.js'
 
+import { Rating } from 'react-native-ratings'
+
 import api from '../../services/api'
 
 import Review from '../../components/Review'
@@ -26,7 +28,7 @@ export default function Product({navigation, route}){
   const [modalVisible, setModalVisible] = useState(false)
   const [reviews, setReviews] = useState([])
   const [selectedShop, setSelectedShop] = useState('AMER')
-  const [grade, setGrade] = useState('')
+  const [grade, setGrade] = useState(2.5)
   const [error, setError] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const [loading, setLoading] = useState(false)
@@ -49,7 +51,7 @@ export default function Product({navigation, route}){
     if(!review || !selectedShop || !grade){
       setError(true)
       setErrorMessage('Preencha todos os campos')
-    } else if(parseFloat(grade.replace(',','.')) > 5 || parseFloat(grade.replace(',','.')) < 0){
+    } else if(grade > 5 || grade < 0){
       setError(true)
       setErrorMessage('Valor da nota deve estar entre 0 e 5')
     } else {
@@ -58,7 +60,7 @@ export default function Product({navigation, route}){
       const data = {
         store: selectedShop,
         description: review,
-        grade: grade.replace(',','.'),
+        grade,
         product: route.params.title
       }
 
@@ -118,7 +120,16 @@ export default function Product({navigation, route}){
   
               <View style={styles.modalAditionalContainer}>
   
-                <View style={{marginRight: "auto", justifyContent: "center", alignItems: "center"}}>
+                <View style={{marginRight: "auto", marginLeft: 8}}>
+                  <Text style={styles.modalCaption}>Deslize para avaliar</Text>
+                  <Rating 
+                    imageSize={30}
+                    fractions={5}
+                    style={{height: 50, paddingTop: 8}}
+                    onFinishRating={rating => setGrade(rating)}
+                  />
+                </View>
+                {/* <View style={{marginRight: "auto", justifyContent: "center", alignItems: "center"}}>
                   <Text style={styles.modalCaption}>Nota do produto</Text>
                   <TextInput 
                     value={grade}
@@ -127,13 +138,13 @@ export default function Product({navigation, route}){
                     style={styles.scoreInput}
                     placeholder="Ex. 4.2 (máx 5)"
                   />
-                </View>
+                </View> */}
   
-                <View style={{ justifyContent: "center", alignItems: "center"}}>
+                <View style={{ justifyContent: "center", alignItems: "flex-start"}}>
                   <Text style={styles.modalCaption}>Loja onde foi comprado</Text>
                   <Picker
                     selectedValue={selectedShop}
-                    style={{height: 50, width: 200}}
+                    style={{height: 50, width: 200, backgroundColor: "#f9f9f9", borderRadius: 8}}
                     onValueChange={(item) => setSelectedShop(item)}>
                     <Picker.Item label="Lojas Americanas" value="AMER"/>
                     <Picker.Item label="Submarino" value="SUBM"/>
@@ -185,7 +196,7 @@ export default function Product({navigation, route}){
           <FlatList 
             data={reviews}
             showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) => <Review id={item.id} ranking={false} product={route.params.title} likes={item.likes} name={item.author.username} shop={item.formated_store[1]} review={item.description} grade={(item.grade).toFixed(2)}/>}
+            renderItem={({ item }) => <Review id={item.id} ranking={false} product={route.params.title} likes={item.likes} name={item.author.username} shop={item.formated_store[1]} review={item.description} grade={parseFloat(item.grade)}/>}
             keyExtractor={item => String(item.id)}
             horizontal={true}
           />

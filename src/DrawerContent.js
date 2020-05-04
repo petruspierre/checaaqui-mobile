@@ -113,8 +113,16 @@ export default function DrawerContent(props) {
     async function handleLogout() {
         const value = await AsyncStorage.getItem('token')
         if(value !== null){
-            await AsyncStorage.removeItem('token')
-            await AsyncStorage.removeItem('profile')
+            await AsyncStorage.setItem('token', null)
+            const profile = {
+                id: 0,
+                username: '',
+                score: '',
+                points: '',
+                is_premium: false
+              }
+          
+              await AsyncStorage.setItem('profile', JSON.stringify(profile))
             setToken(null)
         } else {
             Alert.alert('Erro', 'Você precisa fazer login primeiro.')

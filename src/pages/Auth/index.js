@@ -72,9 +72,11 @@ export default function Auth({ navigation, route }){
       setError(false)
 
       const token = await loginUser()
-      await AsyncStorage.setItem('token', token)
       await setupProfile(token)
+      await AsyncStorage.setItem('token', token)
       setLoading(false)
+      setUsername('')
+      setPassword('')
       navigation.navigate('Home')
     }
   }
@@ -134,20 +136,27 @@ export default function Auth({ navigation, route }){
 
   async function handleConfirmation(){
 
-    try {
-      setLoading(true)
-      const data = {
-        token: confirmation
+    if(!confirmation){
+      setError(true)
+      setErrorMessage("Digite um código válido")
+    } 
+    else {
+      try {
+        setError(false)
+        setLoading(true)
+        const data = {
+          token: confirmation
+        }
+  
+        const response = await api.post('/users/authenticate-email/', data)
+        console.log(response.data.message)
+        setLoading(false)
+      } catch (err) {
+        console.error(err)
       }
-
-      const response = await api.post('/users/authenticate-email/', data)
-      console.log(response.data.message)
-      setLoading(false)
-    } catch (err) {
-      console.error(err)
+  
+      setType('Login')
     }
-
-    setType('Login')
   }
 
   function handleSwitchType(){

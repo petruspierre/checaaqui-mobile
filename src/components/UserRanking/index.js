@@ -18,7 +18,7 @@ export default function UserRanking( props ){
       <View style={{justifyContent: "center", alignItems: "center"}}>
         <View style={styles.scoreContainer}>
           <Feather name="star" />
-          <Text style={styles.userScore}>{props.score}</Text>
+          <Text style={styles.userScore}>{parseFloat(props.score).toFixed(2)}</Text>
         </View>
         <Text style={{marginLeft: "auto", color: "#666"}}>{props.points}</Text>
       </View>

@@ -76,17 +76,21 @@ export default function Profile({ navigation, route }){
   async function loadStats(){
 
     setLoading(true)
-    let response = await api.get(`/users/?name=${route.params.username}`)
-    const profile = response.data.results[0]
 
-    response = await api.get(`/reviews/?author=${route.params.username}`)
-    const _reviews = response.data.results
+    const token = await AsyncStorage.getItem('token')
+
+    const response = await api.get(`/users/self`, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    const profile = response.data
 
     setUsername(profile.username)
     setPoints(profile.profile.points)
     setScore(profile.profile.score)
     setId(profile.id)
-    setReviews(_reviews)
+    setReviews(profile.reviews)
     setIsPremium(profile.profile.is_premium)
 
     setLoading(false)

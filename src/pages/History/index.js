@@ -11,6 +11,8 @@ import {
     TextInput,
 } from 'react-native'
 
+import {Rating} from 'react-native-ratings'
+
 import Header from '../../components/Header'
 import Attendance from '../../components/Attendance'
 import AttendanceClient from '../../components/AttendanceClient'
@@ -27,7 +29,7 @@ export default function History({navigation, route}) {
     const [attendancesAsAttendant, setAttendancesAsAttendant] = useState([])
 
     const [modalVisible, setModalVisible] = useState(false)
-    const [grade, setGrade] = useState('')
+    const [grade, setGrade] = useState(2.5)
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const [selectedId, setSelectedId] = useState(0)
@@ -43,7 +45,7 @@ export default function History({navigation, route}) {
         setLoading(true)
         const token = await AsyncStorage.getItem('token')
 
-        console.log(token)
+        //console.log(token)
 
         const response = await api.get('/attendance/client/', {
             headers: {
@@ -53,15 +55,17 @@ export default function History({navigation, route}) {
 
         setAttendancesAsClient(response.data.results)
 
-        console.log(response.data)
+        //console.log(response.data)
+        setLoading(false)
 
     }
 
     async function getAttendancesAttendant(){
 
+        setLoading(true)
         const token = await AsyncStorage.getItem('token')
 
-        console.log(token)
+        //console.log(token)
 
         const response = await api.get('/attendance/attendant', {
             headers: {
@@ -71,7 +75,7 @@ export default function History({navigation, route}) {
 
         setAttendancesAsAttendant(response.data.results)
 
-        console.log(response.data)
+        //console.log(response.data)
 
         setLoading(false)
 
@@ -86,12 +90,12 @@ export default function History({navigation, route}) {
             setError(false)
 
             const data = {
-                score: parseFloat(grade.replace(',','.'))
+                score: grade
             }
 
             
             const token = await AsyncStorage.getItem('token')
-            console.log(data)
+            //console.log(data)
             
             if(type === 'client'){
                 const response = await api.put(`attendance/${selectedId}/client-avaliate/`, data, {
@@ -99,14 +103,14 @@ export default function History({navigation, route}) {
                         Authorization: `Token ${token}`
                     }
                 })
-                console.log(response.data)
+                //console.log(response.data)
             } else {
                 const response = await api.put(`attendance/${selectedId}/attendant-avaliate/`, data, {
                     headers: {
                         Authorization: `Token ${token}`
                     }
                 })
-                console.log(response.data)
+                //console.log(response.data)
             }
     
             setModalVisible(false)
@@ -119,9 +123,11 @@ export default function History({navigation, route}) {
         if(showMode === 'cliente') {
             setShowMode('atendente')
             setInverseShowMode('cliente')
+            getAttendancesAttendant()
         } else {
             setShowMode('cliente')
             setInverseShowMode('atendente')
+            getAttendancesAsClient()
         }
     }
 
@@ -130,7 +136,6 @@ export default function History({navigation, route}) {
         setAttendancesAsClient([])
         setAttendancesAsAttendant([])
         getAttendancesAsClient()
-        getAttendancesAttendant()
     }, [])
 
     if(loading){
@@ -162,12 +167,13 @@ export default function History({navigation, route}) {
                         <View style={styles.modalContainer}>
                             <Text style={styles.title}>Avalie este atendimento</Text>
                             {error && <Text style={{color:'red', marginBottom: 16}}>{errorMessage}</Text>}
-                            <TextInput
-                                style={styles.input}
-                                placeholder="Ex.: 4.6 (máx 5)"
-                                keyboardType="number-pad" 
-                                value={grade}
-                                onChangeText={text => setGrade(text)} />
+                            <Text style={{marginBottom: 16, fontSize: 18}}>Deslize para avaliar</Text>
+                            <Rating 
+                                imageSize={30}
+                                fractions={5}
+                                style={{height: 50, paddingTop: 8}}
+                                onFinishRating={rating => setGrade(rating)}
+                            />
                             <TouchableOpacity style={styles.modalButton} onPress={handleEvaluate}>
                                 <Text style={styles.modalButtonText}>AVALIAR</Text>
                             </TouchableOpacity>
@@ -197,7 +203,6 @@ export default function History({navigation, route}) {
                 onRefresh={() => {
                     setRefreshClient(true)
                     getAttendancesAsClient()
-                    getAttendancesAttendant()
                     setRefreshClient(false)
                 }}
                 refreshing={refreshClient}
@@ -205,7 +210,7 @@ export default function History({navigation, route}) {
                 renderItem={({item}) => 
                     <AttendanceClient 
                         id={item.id} 
-                        client={item.client.username} 
+                        client={item.attendant.username} 
                         attendantWasEvaluated={item.attendant_was_evaluated}
                         product={item.product}
                         createdAt={item.created_at}
@@ -214,7 +219,7 @@ export default function History({navigation, route}) {
                             setError(false)
                             setModalVisible(true)
                             setType('client')
-                            setGrade('')
+                            setGrade(2.5)
                         }}
                         attendant={false}
                         attendantScore={item.attendant_score}/>}
@@ -223,12 +228,11 @@ export default function History({navigation, route}) {
                 {showMode === 'atendente' &&  
                 <FlatList 
                     onRefresh={() => {
-                        setRefreshClient(true)
-                        getAttendancesAsClient()
+                        setRefreshAttendant(true)
                         getAttendancesAttendant()
-                        setRefreshClient(false)
+                        setRefreshAttendant(false)
                     }}
-                    refreshing={refreshClient}
+                    refreshing={refreshAttendant}
                     data={attendancesAsAttendant}
                     renderItem={({item}) => 
                         <Attendance 
@@ -243,7 +247,7 @@ export default function History({navigation, route}) {
                                 setError(false)
                                 setModalVisible(true)
                                 setType('attendant')
-                                setGrade('')
+                                setGrade(2.5)
                             }}
                             attendant={true}
                             clientScore={item.client_score}/>}

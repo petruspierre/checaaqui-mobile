@@ -104,10 +104,18 @@ export default function Home({ navigation }){
               style={styles.input}
               value={search}
               placeholder={placeholder}
+              placeholderTextColor="#555"
               onChangeText={text => {
                 setSearch(text)
               }}
             />
+            {!categoriesVisible && (<TouchableOpacity style={{backgroundColor: "#ddd", height: 50, justifyContent: "center", paddingRight: 8,}}
+              onPress={() => {
+                setSearch('')
+                setCategoriesVisible(true)
+              }}> 
+              <Feather name="x" size={24} color="#aaa"/>
+            </TouchableOpacity>)}
             <TouchableOpacity style={styles.button} onPress={handleSearch}>
               <Feather name="search" size={24} color="#fff" />
             </TouchableOpacity>
@@ -157,7 +165,7 @@ export default function Home({ navigation }){
           <FlatList 
             data={attendantsList}
             renderItem={({item}) => <UserRanking name={item.username} score={item.profile.score} points={item.profile.points}/>}
-            keyExtractor={item => String(item.name)}
+            keyExtractor={item => String(item.username)}
           /> :
           <Text style={{marginTop: 80}}>Nenhum resultado encontrado com sua pesquisa</Text>
         )

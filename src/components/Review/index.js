@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import {View, ScrollView, Text, Image, TouchableOpacity, AsyncStorage} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
+import {AirbnbRating} from 'react-native-ratings'
+
 import styles from './styles'
 import commonStyles from '../../commonStyles'
 
@@ -49,8 +51,15 @@ export default function Review(props) {
                         <Text style={styles.shopProfile}>{props.shop}</Text>
                     </View>
                     <View style={{flexDirection: "row", justifyContent: "center", alignItems: "center", marginLeft: "auto"}}>
-                        <Feather name="star" />
-                        <Text style={{marginLeft: 8, fontSize: 16}}>{props.grade}</Text>
+                        <AirbnbRating 
+                            size={10}
+                            showRating={false}
+                            isDisabled={true}
+                            defaultRating={props.grade}
+                            starContainerStyle={{backgroundColor: "#f9f9f9"}}
+                        />
+                        {/* <Feather name="star" />
+                        <Text style={{marginLeft: 8, fontSize: 16}}>{props.grade}</Text> */}
                     </View>
                 </View>
                 <ScrollView style={{flex: 1}}>
@@ -74,9 +83,16 @@ export default function Review(props) {
                     <View style={styles.bordinhaImagem}>
                         <Image style={styles.profileImage} source={{uri: "https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"}} />
                     </View>
-                    <View style={{justifyContent: "center"}}>
+                    <View style={{justifyContent: "center", alignItems: "flex-start"}}>
                         <Text style={styles.nameProfile}>{props.name}</Text>
                         <Text style={styles.shopProfile}>{props.shop}</Text>
+                        <AirbnbRating 
+                            size={10}
+                            showRating={false}
+                            isDisabled={true}
+                            defaultRating={props.grade}
+                            starContainerStyle={{backgroundColor: "#f9f9f9"}}
+                        />
                     </View>
                 </View>
                 <ScrollView style={{flex: 1}}>

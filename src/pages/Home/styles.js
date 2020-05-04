@@ -59,22 +59,22 @@ export default styles = StyleSheet.create({
     height: 50,
     borderBottomLeftRadius: 8,
     borderTopLeftRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 1,
+    // },
+    // shadowOpacity: 0.22,
+    // shadowRadius: 2.22,
 
-    elevation: 3,
+    // elevation: 3,
   },
   inputContainer: {
     marginTop: 16,
     marginBottom: 32,
     marginRight: 64,
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   button: {
     borderTopRightRadius: 8,
